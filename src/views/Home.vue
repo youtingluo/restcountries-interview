@@ -1,10 +1,12 @@
 <template>
   <div class="home">
-    {{ text }}
+    <HelloWorld />
   </div>
 </template>
 
 <script>
+import HelloWorld from "../components/HelloWorld.vue";
+
 export default {
   name: "Home",
   data() {
@@ -12,10 +14,8 @@ export default {
       text: "文字",
     };
   },
-  created() {
-    this.$http.get("https://restcountries.com/v3.1/all").then((res) => {
-      console.log(res.data);
-    });
+  components: {
+    HelloWorld,
   },
 };
 </script>
