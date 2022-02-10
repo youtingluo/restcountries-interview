@@ -6,6 +6,10 @@
     v-model="countryName"
     @input="filterContry"
   />
+  <button type="button" class="btn btn-primary" @click="sortContry">
+    正序
+  </button>
+  <button type="button" class="btn btn-primary" @click="reverseSortContry">倒序</button>
   <div class="row">
     <div class="card col-3" v-for="item in allCountries" :key="item.flags.png">
       <div class="card-body">
@@ -39,6 +43,7 @@ export default {
       pageSize: 25,
       currPage: 1,
       countryName: "",
+      sort: true,
     };
   },
   computed: {
@@ -64,6 +69,19 @@ export default {
             this.countries = res.data;
           });
       }
+    },
+    sortContry() {
+      this.countries.sort((a, b) => {
+        if (a.name.official[0] < b.name.official[0]) {
+          return -1;
+        }
+        if (a.name.official[0] > b.name.official[0]) {
+          return 1;
+        }
+      });
+    },
+    reverseSortContry() {
+      this.countries.reverse();
     },
     pagination(data) {
       // 取得資料長度
