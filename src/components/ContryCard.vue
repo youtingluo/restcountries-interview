@@ -18,7 +18,7 @@
           :src="item.flags.png"
           :alt="item.name.official"
         />
-        <h5 class="card-title">{{ item.name.official }}</h5>
+        <a class="card-title" @click="getDetail(item)">{{ item.name.official }}</a>
         <ul class="list-unstyled">
           <li>2位國家代碼(cca2) {{ item.cca2 }}</li>
           <li>3位國家代碼(cca3) {{ item.cca3 }}</li>
@@ -32,19 +32,25 @@
       </div>
     </div>
   </div>
+  <ContryModal ref="contryModal" :country="contry" />
 </template>
 
 <script>
+import ContryModal from "./ContyModal.vue";
 export default {
   name: "ContryCard",
   data() {
     return {
       countries: [],
+      contry: [],
       pageSize: 25,
       currPage: 1,
       countryName: "",
       sort: true,
     };
+  },
+  components: {
+    ContryModal,
   },
   computed: {
     allCountries() {
@@ -92,6 +98,14 @@ export default {
       const perpage = 25;
       const pageTotal = Math.ceil(dataTotal / perpage);
       console.log(`全部資料:${dataTotal} 每一頁顯示:${pageTotal}筆`);
+    },
+    getDetail(item) {
+      this.$refs.contryModal.openModal();
+      this.$http
+        .get(`https://restcountries.com/v3.1/name/${item.name.official}?fullText=true`)
+        .then((res) => {
+          this.contry = res.data;
+        });
     },
   },
   created() {
