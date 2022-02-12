@@ -3,7 +3,7 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">{{ country[0].name.official }}</h5>
+          <h5 class="modal-title" v-if="country.name">{{ country.name.official }}</h5>
           <button
             type="button"
             class="btn-close"
@@ -12,13 +12,13 @@
           ></button>
         </div>
         <div class="modal-body">
-          <p>地區：{{ country[0].region }}</p>
-          <p>國際稱呼：{{ country[0].name.official }}</p>
-          <p>普遍稱呼：{{ country[0].name.common }}</p>
-          <p>人口：{{ country[0].population }}</p>
-          <p>首都：{{ country[0].cioc }}</p>
-          <p>是否獨立：{{ country[0].independent ? "是" : "否" }}</p>
-          <a target="_blank" :href="country[0].maps.googleMaps">Google 地圖</a>
+          <p v-if="country.name">地區：{{ country.region }}</p>
+          <p v-if="country.name">國際稱呼：{{ country.name.official }}</p>
+          <p v-if="country.name">普遍稱呼：{{ country.name.common }}</p>
+          <p v-if="country.name">人口：{{ country.population }}</p>
+          <p v-if="country.name">首都：{{ country.cioc }}</p>
+          <p v-if="country.name">是否獨立：{{ country.independent ? "是" : "否" }}</p>
+          <a v-if="country.maps" target="_blank" :href="country.maps.googleMaps">Google 地圖</a>
         </div>
         <div class="modal-footer">
           <button
@@ -38,12 +38,12 @@
 import Modal from "bootstrap/js/dist/modal";
 
 export default {
+  props: ["country"],
   data() {
     return {
       modal: "",
     };
   },
-  props: ["country"],
   methods: {
     openModal() {
       this.modal.show();
@@ -51,7 +51,6 @@ export default {
   },
   mounted() {
     // 實體 Modal
-    console.log(this.$refs);
     this.modal = new Modal(this.$refs.modal, {
       backdrop: "static",
     });

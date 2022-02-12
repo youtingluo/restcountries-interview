@@ -1,34 +1,41 @@
 <template>
-  <label for="contryName">搜尋國家</label>
+  <label for="contryName" class="me-2">搜尋國家</label>
   <input
     id="contryName"
     type="text"
     v-model="countryName"
-    @input="filterContry"
+    placeholder="按下 enter 搜尋"
+    @keypress.enter="filterContry"
   />
-  <button type="button" class="btn btn-primary" @click="sortContry">
+  <button type="button" class="btn btn-primary mx-3" @click="sortContry">
     正序
   </button>
-  <button type="button" class="btn btn-primary" @click="reverseSortContry">倒序</button>
-  <div class="row">
-    <div class="card col-3" v-for="item in allCountries" :key="item.flags.png">
-      <div class="card-body">
+  <button type="button" class="btn btn-primary" @click="reverseSortContry">
+    倒序
+  </button>
+  <div class="row g-3">
+    <div class="col-3" v-for="item in allCountries" :key="item.flags.png">
+      <div class="card">
         <img
-          class="img-fluid"
+          class="card-img-top"
           :src="item.flags.png"
           :alt="item.name.official"
+          height="200"
         />
-        <a class="card-title" @click="getDetail(item)">{{ item.name.official }}</a>
-        <ul class="list-unstyled">
-          <li>2位國家代碼(cca2) {{ item.cca2 }}</li>
-          <li>3位國家代碼(cca3) {{ item.cca3 }}</li>
-          <li v-if="item.translations.zho">
-            母語名稱 {{ item.translations.zho.official }}
-          </li>
-          <li>替代國家名稱(altSpellings) {{ item.altSpellings[0] }}</li>
-          <li>國際電話區號(idd) {{ item.idd.root }}</li>
-        </ul>
-        <a href="#" class="btn btn-primary">Go somewhere</a>
+        <div class="card-body">
+          <a href="#" class="card-link" @click.prevent="getDetail(item)">{{
+            item.name.official
+          }}</a>
+          <ul class="list-unstyled text-start mt-3">
+            <li class="mb-2">2位國家代碼(cca2)：{{ item.cca2 }}</li>
+            <li class="mb-2">3位國家代碼(cca3)：{{ item.cca3 }}</li>
+            <li class="mb-2" v-if="item.translations.zho">
+              母語名稱：{{ item.translations.zho.official }}
+            </li>
+            <li class="mb-2">替代國家名稱(altSpellings)：{{ item.altSpellings[0] }}</li>
+            <li>國際電話區號(idd)：{{ item.idd.root }}</li>
+          </ul>
+        </div>
       </div>
     </div>
   </div>
@@ -37,12 +44,13 @@
 
 <script>
 import ContryModal from "./ContyModal.vue";
+
 export default {
   name: "ContryCard",
   data() {
     return {
       countries: [],
-      contry: [],
+      contry: {},
       pageSize: 25,
       currPage: 1,
       countryName: "",
@@ -89,26 +97,19 @@ export default {
     reverseSortContry() {
       this.countries.reverse();
     },
-    pagination(data) {
-      // 取得資料長度
-      console.log(data);
-      const dataTotal = this.countries.length;
-
-      // 要顯示在畫面上的資料數量，預設每一頁只顯示五筆資料。
-      const perpage = 25;
-      const pageTotal = Math.ceil(dataTotal / perpage);
-      console.log(`全部資料:${dataTotal} 每一頁顯示:${pageTotal}筆`);
-    },
     getDetail(item) {
+      this.contry = {};
       this.$refs.contryModal.openModal();
       this.$http
         .get(`https://restcountries.com/v3.1/name/${item.name.official}?fullText=true`)
         .then((res) => {
-          this.contry = res.data;
+          console.log(res.data);
+          this.contry = res.data[0];
         });
     },
   },
   created() {
+    this.countryName = "";
     this.getAllcontry();
   },
 };
