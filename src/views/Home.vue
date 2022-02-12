@@ -1,11 +1,11 @@
 <template>
   <div class="home">
-    <HelloWorld />
+    <ContryCard />
   </div>
 </template>
 
 <script>
-import HelloWorld from "../components/HelloWorld.vue";
+import ContryCard from "../components/ContryCard.vue";
 
 export default {
   name: "Home",
@@ -15,7 +15,7 @@ export default {
     };
   },
   components: {
-    HelloWorld,
+    ContryCard,
   },
 };
 </script>
